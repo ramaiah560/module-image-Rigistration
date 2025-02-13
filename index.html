@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Tilt and Rotate Tool</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+      }
+
+      h1 {
+        font-size: 24px;
+        color: #333;
+      }
+
+      p {
+        font-size: 16px;
+        color: #555;
+      }
+
+      .start-button {
+        padding: 12px 20px;
+        background-color: #87ceeb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .start-button:hover {
+        background-color: #69b0d9;
+      }
+
+      canvas {
+        border: 1px solid black;
+      }
+
+      .tranform-container {
+        display: none;
+      }
+
+      .container-image-registration {
+        display: none;
+      }
+
+      .wrapper-container {
+        display: flex;
+        gap: 10px;
+      }
+
+      .output-maincontainer1,
+      .output-maincontainer2 {
+        height: 500px;
+        width: 600px;
+        position: relative;
+        border: 2px solid black;
+      }
+
+      .output-container1,
+      .output-container2 {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+
+      #outputCanvas1,
+      #outputCanvas2 {
+        height: 250px;
+        width: 300px;
+      }
+
+      .blur-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        filter: blur(1.8px);
+        z-index: -1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Instructions Page -->
+    <div id="instructionsPage" class="container">
+      <h1>Welcome to the Image Tilt and Rotate Tool</h1>
+      <p>
+        This tool allows you to upload an image, apply tilt and rotation, and
+        view different perspectives of the image. Click the button below to get
+        started.
+      </p>
+      <p>Follow these instructions to run the code:</p>
+      <ul>
+        <li>Upload an image and apply tilt/rotate transformations</li>
+        <li>Interactive main image with mouse zoom and pan</li>
+        <li>Four transformed images with labeled rotation/tilt angles</li>
+        <li>Individual export buttons for each output image</li>
+        <li>User-friendly UI with clean design and responsive layout</li>
+      </ul>
+      <button class="start-button" onclick="startApplication()">Start</button>
+    </div>
+
+    <!-- Image Registration Page -->
+    <div id="imageRegistrationPage" class="container-image-registration">
+      <h2>Image Registration using Point Mapping</h2>
+      <input type="file" id="baseImageInput" accept="image/*" />
+      <input type="file" id="inputImageInput" accept="image/*" />
+
+      <div class="container">
+        <div>
+          <h3>Base Image</h3>
+          <canvas id="baseCanvas"></canvas>
+        </div>
+        <div>
+          <h3>Input Image</h3>
+          <canvas id="inputCanvas"></canvas>
+        </div>
+      </div>
+
+      <button onclick="computeTransformation()">Click to Transform</button>
+
+      <div class="tranform-container" id="transformedImageContainer">
+        <h3>Transformed Image</h3>
+        <div class="wrapper-container">
+          <div class="output-maincontainer1">
+            <div class="output-container1">
+              <canvas id="outputCanvas1"></canvas>
+            </div>
+          </div>
+
+          <div class="output-maincontainer2">
+            <div class="blur-background" id="blurredBackground"></div>
+            <div class="output-container2">
+              <canvas id="outputCanvas2"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script async src="https://docs.opencv.org/4.5.0/opencv.js"></script>
+    <script>
+      // Function to switch between the instructions and registration pages
+      function startApplication() {
+        document.getElementById("instructionsPage").style.display = "none";
+        document.getElementById("imageRegistrationPage").style.display = "block";
+      }
+
+      // JavaScript for image registration
+      let basePoints = [];
+      let inputPoints = [];
+      let baseCanvas = document.getElementById("baseCanvas");
+      let inputCanvas = document.getElementById("inputCanvas");
+      let outputCanvas2 = document.getElementById("outputCanvas2");
+      let outputCanvas1 = document.getElementById("outputCanvas1");
+      let baseCtx = baseCanvas.getContext("2d");
+      let inputCtx = inputCanvas.getContext("2d");
+
+      let outputCtx1 = outputCanvas1.getContext("2d");
+      let outputCtx2 = outputCanvas2.getContext("2d");
+
+      document
+        .getElementById("baseImageInput")
+        .addEventListener("change", function (event) {
+          loadImage(event.target.files[0], baseCanvas, baseCtx);
+        });
+
+      document
+        .getElementById("inputImageInput")
+        .addEventListener("change", function (event) {
+          loadImage(event.target.files[0], inputCanvas, inputCtx);
+        });
+
+      let cleanBaseImage = null;
+
+      function loadImage(file, canvas, ctx) {
+        let reader = new FileReader();
+        reader.onload = function (event) {
+          let img = new Image();
+          img.onload = function () {
+            canvas.width = img.width / 2;
+            canvas.height = img.height / 2;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            if (canvas === baseCanvas) {
+              cleanBaseImage = new Image();
+              cleanBaseImage.src = canvas.toDataURL();
+            }
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function selectPoints(canvas, pointsArray) {
+        canvas.addEventListener("click", function (event) {
+          if (pointsArray.length < 4) {
+            let rect = canvas.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            let y = event.clientY - rect.top;
+            pointsArray.push([x, y]);
+
+            let ctx = canvas.getContext("2d");
+            ctx.fillStyle = "blue";
+            ctx.font = "16px Arial";
+            ctx.fillText(pointsArray.length, x + 5, y - 5);
+          }
+
+          if (pointsArray.length === 4) {
+            drawOuterRectangle(canvas, pointsArray);
+          }
+        });
+      }
+
+      function drawOuterRectangle(canvas, pointsArray) {
+        let ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+
+        let minX = Math.min(...pointsArray.map((p) => p[0]));
+        let minY = Math.min(...pointsArray.map((p) => p[1]));
+        let maxX = Math.max(...pointsArray.map((p) => p[0]));
+        let maxY = Math.max(...pointsArray.map((p) => p[1]));
+
+        let padding = 30;
+        minX -= padding;
+        minY -= padding;
+        maxX += padding;
+        maxY += padding;
+
+        ctx.beginPath();
+        ctx.rect(minX, minY, maxX - minX, maxY - minY);
+        ctx.stroke();
+      }
+
+      selectPoints(baseCanvas, basePoints);
+      selectPoints(inputCanvas, inputPoints);
+
+      function computeTransformation() {
+    let elements = document.getElementsByClassName("tranform-container");
+
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = "block";
+    }
+
+    if (basePoints.length < 4 || inputPoints.length < 4) {
+        alert("Select exactly 4 corresponding points on both images!");
+        return;
+    }
+
+    baseCtx.clearRect(0, 0, baseCanvas.width, baseCanvas.height);
+
+    if (cleanBaseImage) {
+        baseCtx.drawImage(cleanBaseImage, 0, 0, baseCanvas.width, baseCanvas.height);
+    }
+
+    let padding = 10;
+    let minX = Math.min(...basePoints.map((p) => p[0])) - padding;
+    let minY = Math.min(...basePoints.map((p) => p[1])) - padding;
+    let maxX = Math.max(...basePoints.map((p) => p[0])) + padding;
+    let maxY = Math.max(...basePoints.map((p) => p[1])) + padding;
+
+    minX = Math.max(minX, 0);
+    minY = Math.max(minY, 0);
+
+    let width = maxX - minX;
+    let height = maxY - minY;
+
+    let imageData = baseCtx.getImageData(minX, minY, width, height);
+
+    outputCanvas1.width = width;
+    outputCanvas1.height = height;
+    outputCanvas2.width = width;
+    outputCanvas2.height = height;
+    
+    outputCtx1.fillStyle = "white";
+    outputCtx1.fillRect(0, 0, outputCanvas1.width, outputCanvas1.height);
+    outputCtx1.putImageData(imageData, 0, 0);
+
+    outputCtx2.fillStyle = "white";
+    outputCtx2.fillRect(0, 0, outputCanvas2.width, outputCanvas2.height);
+    outputCtx2.putImageData(imageData, 0, 0);
+
+    let blurredBackground = document.getElementById("blurredBackground");
+    if (cleanBaseImage) {
+        blurredBackground.style.backgroundImage = `url(${cleanBaseImage.src})`;
+        blurredBackground.style.backgroundSize = "cover";
+        blurredBackground.style.backgroundPosition = "center";
+    }
+
+    // Ensure all sections are visible
+    document.getElementById("imageRegistrationPage").style.display = "block";
+    document.getElementById("transformedImageContainer").style.display = "block";
+
+    // Scroll to the transformed section
+    document.getElementById("transformedImageContainer").scrollIntoView({ behavior: "smooth" });
+
+    basePoints = [];
+    inputPoints = [];
+}
+
+    </script>
+  </body>
+</html>
