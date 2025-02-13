@@ -1,56 +1,41 @@
-# module-image-Rigistration
-Image rigistration
-# Image Registration Web Application
+# Web Application for Image Registration
 
 ## Overview
-This web application provides a user-friendly interface for image registration. It enables users to select images, define control points, and overlay a registered image with adjustable opacity.
+This web application provides an intuitive interface for image registration. Users can select images, define control points, and overlay a registered image onto a reference image with adjustable opacity.
 
 ## Features
-- **Image Selection:** Users can select images to be registered and view them in separate windows.
-- **Control Points:** Allows selection of control points using mouse or touch.
-- **Overlay Functionality:** Reference and registered images can be overlaid with adjustable opacity (0.0 to 1.0).
-- **Cross-Platform Compatibility:** Supports Windows, Linux, iOS, and Android.
-- **Browser Compatibility:** Works with Chrome, Safari, Edge, and Firefox.
-- **Device Compatibility:** Accessible on computers, tablets, and mobile devices.
+- **Image Selection**: Users can upload and select images to be registered.
+- **Control Point Selection**: Click or touch to select corresponding points in both images.
+- **Overlay and Opacity Control**: Display the reference image and overlay the registered image in a single window with adjustable opacity (0.0 to 1.0).
 
-## Tabs Description
+## Installation
 
-### 1. Objective
-This application provides a framework for image registration with interactive control point selection and visualization features.
+Clone the repository:
+```sh
+git clone https://github.com/your-username/your-repo.git
+```
 
-### 2. Science
-Image registration is a fundamental technique in computer vision and remote sensing. It aligns two or more images into a common coordinate system, essential for applications such as medical imaging, satellite imagery, and object recognition.
+Navigate to the project folder:
+```sh
+cd your-repo
+```
 
-### 3. Significance
-- **Medical Imaging:** Aligning medical scans for accurate diagnosis.
-- **Remote Sensing:** Combining satellite images for environmental analysis.
-- **Computer Vision:** Enhancing object recognition and scene understanding.
+Open `index.html` in a web browser.
 
-### 4. Description
-The application provides an interactive platform for image registration:
-1. Users upload reference and moving images.
-2. Define corresponding control points using mouse or touch.
-3. Compute transformation and apply registration.
-4. Overlay the registered image on the reference image with adjustable opacity.
+## Usage
+1. Upload the reference and target images.
+2. Use the mouse or touch to select control points.
+3. Adjust the opacity slider to blend the images.
+4. View the registered image overlay.
 
-### 5. Quiz
-To enhance user understanding, a short quiz is included to test knowledge on image registration concepts.
+## Technologies Used
+- HTML
+- CSS
+- JavaScript
 
-### 6. Creators
-Developed by [Your Name/Team].
-
-## Reference
-L. M. G. Fonseca and C. S. Kenney, "Control point assessment for image registration," XII Brazilian Symposium on Computer Graphics and Image Processing (Cat. No.PR00481), Campinas, Brazil, 1999, pp. 125-132, doi: [10.1109/SIBGRA.1999.805717](https://doi.org/10.1109/SIBGRA.1999.805717).
-
-For more details, visit: [https://jigyasa-csir.in/nal/n18-t3-a2/](https://jigyasa-csir.in/nal/n18-t3-a2/)
-
-## Installation & Usage
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/yourusername/image-registration.git
-   ```
-2. Open `index.html` in a browser.
-3. Follow the UI instructions to upload images, select control points, and adjust overlay settings.
+## Contributing
+Contributions are welcome! Feel free to submit a pull request or open an issue for feature suggestions or bug reports.
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See `LICENSE` for details.
+
