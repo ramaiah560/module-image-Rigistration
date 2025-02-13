@@ -1,5 +1,5 @@
 # Web Application for Image Registration
-![image](https://github.com/ramaiah560/Flight-Simulator-/blob/main/Flight.png?semt=ais_hybrid?raw=true)
+![image](https://github.com/ramaiah560/module-image-Rigistration/blob/main/img.jpg?semt=ais_hybrid?raw=true)
 
 ## Overview
 This web application provides an intuitive interface for image registration. Users can select images, define control points, and overlay a registered image onto a reference image with adjustable opacity.
