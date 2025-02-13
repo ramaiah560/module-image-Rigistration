@@ -17,13 +17,19 @@
         background-color: #f5f5f5;
       }
 
-      .container {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-      }
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    border: 1px solid black;
+    width: 300px;
+    height: 300px;
+}
+
 
       h1 {
         font-size: 24px;
@@ -34,6 +40,27 @@
         font-size: 16px;
         color: #555;
       }
+
+      .ii-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    border: 1px solid black;
+    width: 300px;
+    height: 300px;
+}
+
 
       .start-button {
         padding: 12px 20px;
@@ -52,8 +79,10 @@
       }
 
       canvas {
-        border: 1px solid black;
-      }
+  max-width: 100%;
+  height: auto;
+}
+
 
       .tranform-container {
         display: none;
@@ -64,9 +93,12 @@
       }
 
       .wrapper-container {
-        display: flex;
-        gap: 10px;
-      }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 
       .output-maincontainer1,
       .output-maincontainer2 {
@@ -101,45 +133,100 @@
         filter: blur(1.8px);
         z-index: -1;
       }
+
+      .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+#instructionsPage {
+  display: flex;
+  justify-content: space-between; /* Space between instructions and button */
+  align-items: center;
+  width: 80%;
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.instructions-text {
+  flex: 1; /* Takes up most of the space */
+  text-align: left; /* Align text to the left */
+}
+
+.start-button-container {
+  display: flex;
+  justify-content: flex-end; /* Pushes button to the right */
+  align-items: center;
+  flex: 0.3; /* Smaller width for button */
+}
+
+.start-button {
+  padding: 12px 20px;
+  background-color: #87ceeb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+  background-color: #69b0d9;
+}
+
+
     </style>
   </head>
 
   <body>
     <!-- Instructions Page -->
-    <div id="instructionsPage" class="container">
-      <h1>Welcome to the Image Tilt and Rotate Tool</h1>
-      <p>
-        This tool allows you to upload an image, apply tilt and rotation, and
-        view different perspectives of the image. Click the button below to get
-        started.
-      </p>
-      <p>Follow these instructions to run the code:</p>
-      <ul>
-        <li>Upload an image and apply tilt/rotate transformations</li>
-        <li>Interactive main image with mouse zoom and pan</li>
-        <li>Four transformed images with labeled rotation/tilt angles</li>
-        <li>Individual export buttons for each output image</li>
-        <li>User-friendly UI with clean design and responsive layout</li>
-      </ul>
-      <button class="start-button" onclick="startApplication()">Start</button>
-    </div>
+    <div id="instructionsPage">
+  <!-- Left Side: Instructions -->
+  <div class="instructions-text">
+    <h1>Image Registration Instructions</h1>
+    <p>This tool allows you to upload an image, apply tilt and rotation, and view different perspectives.</p>
+    <p>Follow these instructions to run the code:</p>
+    <ul>
+      <li>Upload an image and apply tilt/rotate transformations</li>
+      <li>Interactive main image with mouse zoom and pan</li>
+      <li>Four transformed images with labeled rotation/tilt angles</li>
+      <li>Individual export buttons for each output image</li>
+      <li>User-friendly UI with clean design and responsive layout</li>
+    </ul>
+  </div>
+
+  <!-- Right Side: Start Button -->
+  <div class="start-button-container">
+    <button class="start-button" onclick="startApplication()">Start</button>
+  </div>
+</div>
+
 
     <!-- Image Registration Page -->
     <div id="imageRegistrationPage" class="container-image-registration">
-      <h2>Image Registration using Point Mapping</h2>
+      <h2>Image Registration using Point Mapping</h2> 
       <input type="file" id="baseImageInput" accept="image/*" />
-      <input type="file" id="inputImageInput" accept="image/*" />
+      <input type="file" id="input ImageInput" accept="image/*" />
 
-      <div class="container">
-        <div>
-          <h3>Base Image</h3>
-          <canvas id="baseCanvas"></canvas>
+      <div class="ii-container">
+        <div class="image-container d-flex flex-direction justify-content-end">
+            <h3>Base Image</h3>
+            <canvas id="baseCanvas"></canvas>
         </div>
-        <div>
-          <h3>Input Image</h3>
-          <canvas id="inputCanvas"></canvas>
+        <div class="image-container">
+            <h3>Input Image</h3>
+            <canvas id="inputCanvas"></canvas>
         </div>
-      </div>
+    </div>
+    
 
       <button onclick="computeTransformation()">Click to Transform</button>
 
